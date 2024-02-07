@@ -2,3 +2,4 @@
 
 ## Slice
 
+https://github.com/moonorange/go-quizzes/blob/main/slices.go
