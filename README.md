@@ -1,4 +1,6 @@
-# Collection of Go quizzes
+## Go Quiz Collection
+
+This repository gathers quizzes related to the Go programming language.
 
 ## Slice
 

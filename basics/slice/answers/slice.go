@@ -25,18 +25,13 @@ func create2DSlice(dy int, dx int) [][]uint8 {
 	return res
 }
 
-// Change the code so that new slice doesn't affect "slice"'s underlying array
 func copySlice() {
 	slice := []string{"a", "b", "c"}
-	new := slice
+	new := make([]string, len(slice))
+	// copy slice to new
+	copy(new, slice)
+	// change new
 	new[0] = "CHANGED"
-	fmt.Printf("A2 new: %s\n", new)
-	fmt.Printf("A2 slice has been modified: %s\n", slice)
-
-	slice2 := []string{"a", "b", "c"}
-	new2 := make([]string, len(slice2))
-	copy(new2, slice2)
-	new2[0] = "CHANGED"
-	fmt.Printf("A2 new2: %s\n", new2)
-	fmt.Printf("A2 slice2 has not been modified %s\n", slice2)
+	fmt.Printf("A new: %s\n", new)
+	fmt.Printf("A slice has not been modified %s\n", slice)
 }
