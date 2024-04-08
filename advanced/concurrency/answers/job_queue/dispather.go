@@ -38,7 +38,7 @@ func NewDispatcher(worker Worker, maxWorkers int, buffers int) *Dispatcher {
 // This dispatcher will stops when it receive a value from `ctx.Done`.
 func (d *Dispatcher) Start(ctx context.Context) {
 	d.wg.Add(1)
- 	go d.loop(ctx)
+	go d.loop(ctx)
 }
 
 // Wait blocks until the dispatcher stops.
@@ -46,10 +46,10 @@ func (d *Dispatcher) Wait() {
 	d.wg.Wait()
 }
 
-// Add enqueues a job into the queue.
-// If the number of enqueued jobs has already reached to the maximum size,
-// this will block until the other job has finish and the queue has space to accept a new job.
-func (d *Dispatcher) Add(job *Job) {
+// Enqueue puts a job into the queue.
+// If the number of enqueued jobs has already reached the maximum size,
+// this will block until space becomes available in the queue to accept a new job.
+func (d *Dispatcher) Enqueue(job *Job) {
 	d.jobBuffer <- job
 }
 

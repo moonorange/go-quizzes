@@ -27,6 +27,7 @@ func (p *APIWorker) Work(job *Job) {
 	// Make a fake HTTP request to the mock server
 	resp, err := http.Post(server.URL, "application/json", strings.NewReader(fmt.Sprintf(`{"key": %s}`, job.Payload)))
 	if err != nil {
+		// Output error logs so that failed payload can be retried
 		fmt.Printf("Error ocurred with payload %s: %+v", job.Payload, err)
 		return
 	}
@@ -47,6 +48,5 @@ func mockServer() *httptest.Server {
 		// Print the request body (fake processing)
 		fmt.Println("Received POST request with body:", string(body))
 	}))
-	defer server.Close()
 	return server
 }
