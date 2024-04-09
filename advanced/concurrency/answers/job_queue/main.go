@@ -16,37 +16,45 @@ const (
 )
 
 func main() {
+	// Create a cancellation context to allow graceful shutdown
 	ctx, cancel := context.WithCancel(context.Background())
 
+	// Create a channel to receive OS signals
 	sigCh := make(chan os.Signal, 1)
 	defer close(sigCh)
 
+	// Notify sigCh channel when SIGHUP, SIGQUIT, or SIGINT signals are received
 	signal.Notify(sigCh, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGINT)
 	go func() {
-		// wait until receiving the signal
+		// Wait until receiving the signal
 		<-sigCh
+		// Cancel the context to propagate cancellation through the context tree
 		cancel()
 	}()
 
 	p := NewAPIWorker()
 	d := NewDispatcher(p, 10, 1000)
+	// Start the dispatcher with the cancellation context
 	d.Start(ctx)
 
 	// WaitGroup to wait for all goroutines to finish
-	var wg sync.WaitGroup
-	wg.Add(maxNumWorkers)
+	// var wg sync.WaitGroup
+	// wg.Add(maxNumWorkers)
 	// concurrentEnqueue(d, &wg)
 
 	enqueue(d, 0, totalJobs)
 
-	// Wait for all goroutines to finish
-	wg.Wait()
+	// Wait for all goroutiwnes to finish
+	// wg.Wait()
+
 	fmt.Println("All enqueue jobs completed.")
 
+	// Wait for the dispatcher to finish processing all jobs
 	d.Wait()
 	fmt.Println("Finished!")
 }
 
+// enqueue enqueues jobs into the dispatcher within the specified range
 func enqueue(d *Dispatcher, start, end int) {
 	for i := start; i < end; i++ {
 		payload := fmt.Sprintf("dummy_payload_%d", i)
@@ -55,15 +63,17 @@ func enqueue(d *Dispatcher, start, end int) {
 	}
 }
 
+// concurrentEnqueue enqueues jobs concurrently using multiple goroutines
 func concurrentEnqueue(d *Dispatcher, wg *sync.WaitGroup) {
-	// Launch goroutines
 	for i := 0; i < maxNumWorkers; i++ {
 		start := i * jobsPerRoutine
 		end := start + jobsPerRoutine
+		// Handle remaining jobs for the last goroutine
 		if i == maxNumWorkers-1 {
-			end = totalJobs // Handle remaining jobs for the last goroutine
+			end = totalJobs
 		}
 		fmt.Printf("start: %d end: %d\n", start, end)
+		// Launch a goroutine to enqueue jobs within the specified range
 		go func() {
 			defer wg.Done()
 			enqueue(d, start, end)
