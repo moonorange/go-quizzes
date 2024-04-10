@@ -23,8 +23,8 @@ func main() {
 	sigCh := make(chan os.Signal, 1)
 	defer close(sigCh)
 
-	// Notify sigCh channel when SIGHUP, SIGQUIT, or SIGINT signals are received
-	signal.Notify(sigCh, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGINT)
+	// Notify sigCh channel
+	signal.Notify(sigCh, syscall.SIGTERM, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGINT)
 	go func() {
 		// Wait until receiving the signal
 		<-sigCh
