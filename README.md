@@ -2,9 +2,11 @@
 
 This repository gathers quizzes related to the Go programming language.
 
-## Slice
+## Covered Topics so far
 
-https://github.com/moonorange/go-quizzes/blob/main/slices.go
+[Slices](https://github.com/moonorange/go-quizzes/blob/main/slices.go)
+
+[Concurrency](https://github.com/moonorange/go-quizzes/tree/main/advanced/concurrency/answers/job_queue)
 
 ## Contributions
 
