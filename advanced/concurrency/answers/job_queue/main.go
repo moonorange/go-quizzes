@@ -33,19 +33,19 @@ func main() {
 	}()
 
 	p := NewAPIWorker()
-	d := NewDispatcher(p, 10, 1000)
+	d := NewDispatcher(p, 10, 100)
 	// Start the dispatcher with the cancellation context
-	d.Start(ctx)
+	go d.Start(ctx)
 
 	// WaitGroup to wait for all goroutines to finish
-	// var wg sync.WaitGroup
-	// wg.Add(maxNumWorkers)
-	// concurrentEnqueue(d, &wg)
+	var wg sync.WaitGroup
+	wg.Add(maxNumWorkers)
+	concurrentEnqueue(d, &wg)
 
-	enqueue(d, 0, totalJobs)
+	// enqueue(d, 0, totalJobs)
 
-	// Wait for all goroutiwnes to finish
-	// wg.Wait()
+	// Wait for all goroutines to finish
+	wg.Wait()
 
 	fmt.Println("All enqueue jobs completed.")
 
