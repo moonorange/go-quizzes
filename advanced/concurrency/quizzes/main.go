@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 )
 
@@ -31,12 +32,18 @@ func main() {
 		cancel()
 	}()
 
-	p := NewAPIWorker()
+	p := NewWorker()
 	d := NewDispatcher(p, 10, 100)
 	// Start the dispatcher with the cancellation context
 	go d.Start(ctx)
 
+	// WaitGroup to wait for all goroutines to finish
+	var wg sync.WaitGroup
+	wg.Add(maxNumWorkers)
 	enqueue(d, 0, totalJobs)
+
+	// Wait for all goroutines to finish
+	wg.Wait()
 
 	fmt.Println("All enqueue jobs completed.")
 
@@ -45,7 +52,6 @@ func main() {
 	fmt.Println("Finished!")
 }
 
-// enqueue enqueues jobs into the dispatcher within the specified range
 func enqueue(d *Dispatcher, start, end int) {
 	for i := start; i < end; i++ {
 		payload := fmt.Sprintf("dummy_payload_%d", i)
