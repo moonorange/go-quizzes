@@ -12,6 +12,6 @@ Your goal is to implement the logic necessary to start worker routines and coord
 
 ## Expected Result
 
-YWhen running the program, you should see the payload of enqueued jobs printed to the console, as long as the job queue is not empty.
+When running the program, you should see the payload of enqueued jobs printed to the console, as long as the job queue is not empty.
 
 The program will continue running indefinitely until you stop it, even if the job queue becomes empty.
