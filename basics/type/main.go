@@ -13,6 +13,5 @@ func main() {
 	fmt.Println(v, ok)
 	fmt.Println(s, ok2)
 
-	s2 := i.(string) // this panics
-	fmt.Println(s2)
+	s2 := i.(string) // this panics without comma, ok form
 }
